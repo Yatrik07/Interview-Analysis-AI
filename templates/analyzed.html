@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/style.css">
+    <title>Interview analysis</title>
+</head>
+
+<body>
+    <!--NAV BAR STARTS-->
+
+    <header>
+        <img class="logo" src="image.jpg" alt="logo">
+        <nav>
+            <ul class="nav_links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        <a class="cta" href="#"><button>Analysis</button></a>
+    </header>
+
+    <!--NAV BAR ENDS -- COLUMNS STARTS-->
+
+    <div class="container">
+
+        <div class="column left">
+            <img src="static/neutral.jpg" alt="" class="photo">
+            <p class="image-name"> You where {{ neutral_face }} %  neurtal in the Interview</p>
+            <img src="static/happy.jpg" alt="" class="photo">
+            <p class="image-name"> You where {{ happy_face }}  % happy in the Interview</p>
+        </div>
+
+        <div class="column middle">
+            <!-- Content for the middle column -->
+            <div class="text-block">
+                {% for key, value in text_data.items() %} 
+                {{ key }}
+                <p>
+                    <span {% if value=="anger" %} class="green-text" {% endif %} 
+                    {% if value=="fear" %} class="yellow-text" {% endif%} 
+                    {% if value=="joy" %} class="orange-text" {% endif %} 
+                    {% if value=="love" %} class="red-text" {% endif %} 
+                    {% if value=="sadness" %} class="black-text" {% endif %}
+                    {% if value=="surprise" %} class="brown-text" {% endif %}>
+                        {{ value }}
+                    </span> 
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="column right">
+            <!-- Content for the right column -->
+            <p class="fixed-text" >You were paying attention in {{ pay_attention }} %  of the video.
+                <br>
+                Based on your speech you where {{ neutral }} % neurtal, {{ happy }} % happy and {{ sad }} % sad.
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
