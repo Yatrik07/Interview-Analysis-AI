@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Interview Analysis</title>
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <a href="{{ url_for('index') }}" class="logo-container">
+                <img class="logo" src="{{ url_for('static', filename='images/app-icon.png') }}" alt="Interview Analysis Logo">
+                <span class="brand-name">Interview Analysis</span>
+            </a>
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+            </nav>
+            <!-- Ensure this button also links to analysis page -->
+            <a class="cta" href="{{ url_for('analysis') }}"><button>Analyze</button></a> 
+        </div>
+    </header>
+
+    <!-- Add class="analysis-page" to the main tag -->
+    <main class="analysis-page"> 
+        <div class="upload-container">
+            <h1>Upload Interview Video</h1>
+            <p>Select a video file to analyze the interview performance</p>
+            <!-- Ensure form action points to the correct processing route -->
+            <form action="{{ url_for('process') }}" method="post" enctype="multipart/form-data" class="upload-form">
+                <div class="file-input-container">
+                    <label for="video" class="choose-file-btn">Choose Video File</label>
+                    <input type="file" id="video" name="video" accept="video/*" required> <!-- Added required attribute -->
+                    <span class="file-name">No file chosen</span>
+                </div>
+                <button type="submit" class="submit-btn">Analyze Video</button>
+            </form>
+        </div>
+
+        <!-- ... (keep head, header, charts, etc. the same) ... -->
+
+                <div class="results-card" style="grid-column: 1 / -1;">
+                    <h2>Transcript & Sentiment Analysis</h2>
+                    <p>The transcribed text from your interview, along with its detected emotion.</p>
+                    
+                    <table class="transcript-table">
+                        <thead>
+                            <tr>
+                                <th>Transcribed Text</th>
+                                <th>Detected Emotion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 
+                              *** REFINED LOOP ***
+                              Iterate through the list 'text_data'.
+                              Each 'item_dict' in the list is a dictionary like {'Some text': 'emotion'}.
+                              We need to extract the first key (text) and first value (emotion).
+                            -->
+                            {% if text_data %}
+                                {% for item_dict in text_data %}
+                                    {% if item_dict and item_dict is mapping %} {# Check if it's a non-empty dictionary #}
+                                        {% set text = item_dict.keys() | first %}
+                                        {% set emotion = item_dict.values() | first %}
+                                        <tr>
+                                            <td>{{ text if text is defined else 'N/A' }}</td>
+                                            <td class="emotion-{{ emotion.lower() if emotion and emotion is string else 'other' }}">{{ emotion if emotion is defined else 'N/A' }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <!-- Optional: Handle cases where an item in the list isn't a dict -->
+                                        <tr><td colspan="2">Invalid data format for this entry.</td></tr>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="2">No transcript data was generated or available.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Interview Analysis. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('video');
+            const fileNameDisplay = document.querySelector('.file-name');
+            const uploadForm = document.querySelector('.upload-form');
+
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) { // Added check for this.files
+                    fileNameDisplay.textContent = this.files[0].name;
+                } else {
+                    fileNameDisplay.textContent = 'No file chosen';
+                }
+            });
+
+            uploadForm.addEventListener('submit', function(e) {
+                const submitButton = this.querySelector('.submit-btn');
+                 // Check if a file is selected before disabling
+                if (fileInput.files.length === 0) {
+                     alert("Please choose a video file first."); // Basic validation
+                     e.preventDefault(); // Stop form submission
+                     return;
+                }
+                submitButton.disabled = true;
+                submitButton.textContent = 'Analyzing...';
+                // No need to preventDefault if validation passes, let the form submit
+            });
+        });
+    </script>
+
+    
+</body>
+</html>
+

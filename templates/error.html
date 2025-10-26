@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Interview Analysis - Error</title>
+    <style>
+        .error-container { text-align: center; padding: 4rem 2rem; }
+        .error-message { color: #e74c3c; font-weight: bold; margin-bottom: 1rem; }
+        .traceback {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            text-align: left;
+            white-space: pre-wrap; /* Allows line breaks */
+            word-wrap: break-word; /* Prevents overflow */
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="{{ url_for('index') }}" class="logo-container">
+                <img class="logo" src="{{ url_for('static', filename='images/app-icon.png') }}" alt="Interview Analysis Logo">
+                <span class="brand-name">Interview Analysis</span>
+            </a>
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="{{ url_for('analysis') }}"><button>Analyze</button></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container error-container">
+            <h1>Analysis Failed</h1>
+            <p class="error-message">Sorry, an error occurred during the interview analysis.</p>
+            <p>Please check the video file or try again later.</p>
+
+            <a href="{{ url_for('analysis') }}" class="cta-button" style="margin-top: 2rem; background-color:#e74c3c;">Try Uploading Again</a>
+
+            <!-- Display error details only if in debug mode (optional) -->
+            {% if app.debug and error_message %}
+                <h2>Error Details:</h2>
+                <p><strong>Message:</strong> {{ error_message }}</p>
+                {% if traceback_info %}
+                    <pre class="traceback">{{ traceback_info }}</pre>
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Interview Analysis. All rights reserved.</p>
+    </footer>
+</body>
+</html>

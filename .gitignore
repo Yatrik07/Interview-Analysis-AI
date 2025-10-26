@@ -1,1 +1,14 @@
 ing_2023_env
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+.vscode/
+conda-meta/
+.nonadmin
+xyz.ipynb
+Speech_Rercog.ipynb
+split_and_merge.ipynb
+testing_videos/
+*.pyc

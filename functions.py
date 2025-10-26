@@ -1,4 +1,15 @@
 import os
+os.environ["PATH"] += os.pathsep + r"C:\Users\shahy\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.0-essentials_build\bin"
+
+from pydub import AudioSegment
+from pydub.utils import which
+
+AudioSegment.converter = which("ffmpeg")
+AudioSegment.ffprobe = which("ffprobe")
+
+print("ffmpeg path:", AudioSegment.converter)
+print("ffprobe path:", AudioSegment.ffprobe)
+import os
 import pandas as pd
 import numpy as np
 import re
@@ -31,7 +42,8 @@ import time
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-
+stop_words = set(stopwords.words('english'))
+global SPEECH_CLASSIFICATION, tokenizer
 
 #stop_words = stopwords.words('english')
 
@@ -130,8 +142,25 @@ def face_eye_emotion(video_path:str, face_perc:float, n_fps:int, resize:bool, sh
             # post_process(predicts)
             
             # cv2.imshow('img',img)
-            # Detects eyes of different sizes in the input image 
-            eyes = EYE_CASCADE.detectMultiScale(roi_gray)  
+            # Defensive checks before detecting eyes to avoid passing empty/invalid images
+            # and to handle cascade load failures.
+            if hasattr(EYE_CASCADE, 'empty') and EYE_CASCADE.empty():
+                # Eye cascade failed to load (wrong path or missing file). Skip eye detection.
+                no_eyes += 1
+                continue
+
+            if roi_gray is None or roi_gray.size == 0 or roi_gray.shape[0] < 10 or roi_gray.shape[1] < 10:
+                # ROI is too small or invalid for detection
+                no_eyes += 1
+                continue
+
+            try:
+                # Use explicit parameters and a minimum size to be more robust
+                eyes = EYE_CASCADE.detectMultiScale(roi_gray, scaleFactor=1.1, minNeighbors=5, minSize=(10, 10))
+            except cv2.error:
+                # In rare cases OpenCV can still raise; skip this frame gracefully
+                no_eyes += 1
+                continue
             #To draw a rectangle in eyes 
             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255,0),1)
             count = 0
@@ -369,9 +398,73 @@ def emotion_predictor(cleaned_text, SPEECH_CLASSIFICATION, tokenizer):
 
     return encoder.get(np.argmax(SPEECH_CLASSIFICATION.predict(text_to_seq, verbose = 0), axis = 1)[0])
 
-def classify_speech(df):
+def classify_speech(df, SPEECH_CLASSIFICATION, tokenizer):
     res = []
     for i in df["text"]:
         cleaned = clean_text(i)
-        res.append({i:emotion_predictor(cleaned)})
+        res.append({i: emotion_predictor(cleaned, SPEECH_CLASSIFICATION, tokenizer)})
     return res
+
+def speech2text_pipeline(pipe, audio_path): # Argument name must match the call in app.py
+    """
+    Performs speech-to-text using the provided pipeline and audio file path.
+    Args:
+        pipe: The Hugging Face ASR pipeline.
+        audio_path (str): The full path to the WAV audio file.
+    Returns:
+        pandas.DataFrame or None: DataFrame with 'timestamp' and 'text', or None on error.
+    """
+    try:
+        print(f"Loading audio for ASR from: {audio_path}") # Log the path being used
+        # --- *** USE THE PASSED-IN audio_path *** ---
+        sample = {}
+        # Make sure librosa can handle the path format (e.g., backslashes on Windows)
+        sample['array'], sample["sampling_rate"] = librosa.load(audio_path, sr=16000) # Use the argument here
+        # ---
+
+        print("Running ASR pipeline...")
+        # Make sure the 'pipe' function expects the sample format correctly
+        output = pipe(sample.copy(), batch_size=8, return_timestamps=True)
+        print("ASR pipeline finished.")
+
+        if output and 'chunks' in output:
+            df = pd.DataFrame(output['chunks'])
+            # Ensure columns are correctly named based on pipe output
+            if not df.empty and len(df.columns) >= 2:
+                 # Assuming the first col is timestamp, second is text
+                 df.columns = ["timestamp", "text"] + list(df.columns[2:]) # Keep extra cols if any
+                 # Check timestamp format - Whisper might return dicts like {'timestamp': (0.0, 2.5)}
+                 if not df['timestamp'].empty and isinstance(df['timestamp'].iloc[0], tuple):
+                      print("Timestamps appear valid.")
+                 else:
+                      print("Warning: Timestamps might not be in the expected tuple format.")
+                 return df
+            else:
+                 print("ASR output 'chunks' DataFrame is empty or has unexpected columns.")
+                 return None # Return None or an empty DataFrame as appropriate
+        else:
+            print("ASR output format unexpected or empty. Output:", output)
+            return None
+
+    except FileNotFoundError:
+        print(f"Error in speech2text_pipeline: Audio file not found at {audio_path}")
+        return None
+    except Exception as e:
+        print(f"Error during speech-to-text (librosa load or pipeline): {e}")
+        traceback.print_exc() # Print full traceback for debugging
+        return None
+
+
+# --- Keep all your other functions (face_eye_emotion, post_process, convert, etc.) the same ---
+# ... (rest of your functions.py code) ...
+# Example placeholder for classify_speech if needed for context
+def classify_speech(text_results_df, model, tokenizer):
+    # Dummy implementation - replace with your actual logic
+    # Assumes text_results_df is the DataFrame from speech2text_pipeline
+    results_list = []
+    if text_results_df is not None and 'text' in text_results_df.columns:
+        for text in text_results_df['text']:
+            # Replace with your actual model prediction logic
+            predicted_emotion = "neutral" # Placeholder
+            results_list.append({text: predicted_emotion})
+    return results_list

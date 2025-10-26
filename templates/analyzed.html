@@ -5,66 +5,268 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/style.css">
-    <title>Interview analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Interview Analysis Report</title>
+    <style>
+        /* Add specific styles for the results page */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .results-card {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .results-card h2 {
+            border-bottom: none;
+            margin-top: 0;
+            color: #3498db;
+        }
+        .attention-card {
+            grid-column: 1 / -1; /* Span full width */
+            text-align: center;
+            background-color: #34495e;
+            color: #ecf0f1;
+            padding: 2.5rem;
+        }
+        .attention-card h2 {
+            color: #ecf0f1;
+            margin-bottom: 0.5rem;
+        }
+        .attention-percentage {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 1rem;
+        }
+        .chart-container {
+            position: relative;
+            height: 250px; /* Adjust height as needed */
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .transcript-table {
+            width: 100%;
+            margin-top: 1rem;
+            border-collapse: collapse;
+        }
+        .transcript-table th, .transcript-table td {
+            border: 1px solid #ddd;
+            padding: 0.8rem;
+            text-align: left;
+        }
+        .transcript-table th {
+            background-color: #ecf0f1;
+        }
+         /* Emotion Text Coloring (Add more as needed based on your encoder) */
+        .emotion-anger { color: #e74c3c; font-weight: bold; }
+        .emotion-fear { color: #f39c12; font-weight: bold; }
+        .emotion-joy { color: #2ecc71; font-weight: bold; }
+        .emotion-love { color: #e84393; font-weight: bold; }
+        .emotion-sadness { color: #3498db; font-weight: bold; }
+        .emotion-surprise { color: #9b59b6; font-weight: bold; }
+        .emotion-neutral { color: #7f8c8d; } /* Neutral example */
+        .emotion-other { color: #333; } /* Default */
+
+    </style>
 </head>
 
 <body>
-    <!--NAV BAR STARTS-->
-
     <header>
-        <img class="logo" src="image.jpg" alt="logo">
-        <nav>
-            <ul class="nav_links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-        <a class="cta" href="#"><button>Analysis</button></a>
+        <div class="header-container">
+            <a href="{{ url_for('index') }}" class="logo-container">
+                <img class="logo" src="{{ url_for('static', filename='images/app-icon.png') }}" alt="Interview Analysis Logo">
+                <span class="brand-name">Interview Analysis</span>
+            </a>
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="{{ url_for('analysis') }}"><button>Analyze Again</button></a> <!-- Changed button text -->
+        </div>
     </header>
 
-    <!--NAV BAR ENDS -- COLUMNS STARTS-->
+    <main>
+        <div class="container">
+            <h1>Your Interview Report</h1>
+            <p>Here is a detailed breakdown of your performance, based on facial, vocal, and linguistic analysis.</p>
 
-    <div class="container">
+            <div class="results-grid">
 
-        <div class="column left">
-            <img src="static/neutral.jpg" alt="" class="photo">
-            <p class="image-name"> You where {{ neutral_face }} %  neurtal in the Interview</p>
-            <img src="static/happy.jpg" alt="" class="photo">
-            <p class="image-name"> You where {{ happy_face }}  % happy in the Interview</p>
-        </div>
+                <div class="results-card attention-card">
+                    <h2>Overall Attention</h2>
+                    <p>Percentage of time you were detected looking at the camera.</p>
+                    <div class="attention-percentage">{{ "%.1f"|format(pay_attention | default(0.0)) }}%</div>
+                </div>
 
-        <div class="column middle">
-            <!-- Content for the middle column -->
-            <div class="text-block">
-                {% for key, value in text_data.items() %} 
-                {{ key }}
-                <p>
-                    <span {% if value=="anger" %} class="green-text" {% endif %} 
-                    {% if value=="fear" %} class="yellow-text" {% endif%} 
-                    {% if value=="joy" %} class="orange-text" {% endif %} 
-                    {% if value=="love" %} class="red-text" {% endif %} 
-                    {% if value=="sadness" %} class="black-text" {% endif %}
-                    {% if value=="surprise" %} class="brown-text" {% endif %}>
-                        {{ value }}
-                    </span> 
-                </p>
-                {% endfor %}
+                <div class="results-card">
+                    <h2>Facial Emotion Analysis</h2>
+                    <p>Emotions detected from your facial expressions.</p>
+                    <div class="chart-container">
+                        <canvas id="facialEmotionChart"></canvas>
+                    </div>
+                     <!-- Display raw counts if needed
+                     <p>Neutral: {{ neutral_face }} | Happy: {{ happy_face }} </p>
+                     -->
+                </div>
+
+                <div class="results-card">
+                    <h2>Vocal Emotion Analysis</h2>
+                    <p>Emotions detected from the tone of your voice.</p>
+                     <div class="chart-container">
+                        <canvas id="vocalEmotionChart"></canvas>
+                    </div>
+                     <!-- Display raw counts if needed
+                    <p>Neutral: {{ neutral }} | Happy: {{ happy }} | Sad: {{ sad }}</p>
+                    -->
+                </div>
+
+                <div class="results-card" style="grid-column: 1 / -1;">
+                    <h2>Transcript & Sentiment Analysis</h2>
+                    <p>The transcribed text from your interview, along with its detected emotion.</p>
+
+                    <table class="transcript-table">
+                        <thead>
+                            <tr>
+                                <th>Transcribed Text</th>
+                                <th>Detected Emotion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--
+                                *** REFINED LOOP ***
+                                Iterate through the list 'text_data'.
+                                Each 'item_dict' in the list is a dictionary like {'Some text': 'emotion'}.
+                                We need to extract the first key (text) and first value (emotion).
+                            -->
+                            {% if text_data %}
+                                {% for item_dict in text_data %}
+                                    {% if item_dict and item_dict is mapping %} {# Check if it's a non-empty dictionary #}
+                                        {% set text = item_dict.keys() | first %}
+                                        {% set emotion = item_dict.values() | first %}
+                                        <tr>
+                                            <td>{{ text if text is defined else 'N/A' }}</td>
+                                            <td class="emotion-{{ emotion.lower() if emotion and emotion is string else 'other' }}">{{ emotion if emotion is defined else 'N/A' }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <!-- Optional: Handle cases where an item in the list isn't a dict -->
+                                        <tr><td colspan="2">Invalid data format for this entry.</td></tr>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="2">No transcript data was generated or available.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
+    </main>
 
-        <div class="column right">
-            <!-- Content for the right column -->
-            <p class="fixed-text" >You were paying attention in {{ pay_attention }} %  of the video.
-                <br>
-                Based on your speech you where {{ neutral }} % neurtal, {{ happy }} % happy and {{ sad }} % sad.
-            </p>
+    <footer>
+        <p>&copy; 2025 Interview Analysis. All rights reserved.</p>
+    </footer>
 
-        </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Facial Emotion Chart ---
+            const facialCtx = document.getElementById('facialEmotionChart');
+            if (facialCtx) {
+                try {
+                    const facialData = {
+                        labels: ['Neutral', 'Happy'], // Add other emotions if passed from Flask
+                        datasets: [{
+                            label: 'Facial Emotion Count',
+                            // Use the variables passed from Flask
+                            data: [{{ neutral_face | default(0) }}, {{ happy_face | default(0) }}],
+                            backgroundColor: [
+                                'rgba(127, 140, 141, 0.7)', // Neutral (Grey)
+                                'rgba(46, 204, 113, 0.7)'  // Happy (Green)
+                                // Add more colors if needed
+                            ],
+                            borderColor: [
+                                'rgba(127, 140, 141, 1)',
+                                'rgba(46, 204, 113, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    };
+                    new Chart(facialCtx, {
+                        type: 'bar',
+                        data: facialData,
+                        options: {
+                            scales: { y: { beginAtZero: true } },
+                            responsive: true,
+                            maintainAspectRatio: false,
+                             plugins: { legend: { display: false } }
+                        }
+                    });
+                } catch (e) {
+                    console.error("Error creating facial chart:", e);
+                    facialCtx.textContent = "Could not load facial emotion chart.";
+                }
+            } else {
+                 console.error("Canvas element for facial chart not found.");
+            }
 
-    </div>
+
+            // --- Vocal Emotion Chart ---
+            const vocalCtx = document.getElementById('vocalEmotionChart');
+             if (vocalCtx) {
+                 try {
+                    const vocalData = {
+                        labels: ['Neutral', 'Happy', 'Sad'], // Add other emotions if passed
+                        datasets: [{
+                            label: 'Vocal Emotion Count',
+                            // Use variables passed from Flask
+                            data: [{{ neutral | default(0) }}, {{ happy | default(0) }}, {{ sad | default(0) }}],
+                             backgroundColor: [
+                                'rgba(127, 140, 141, 0.7)', // Neutral (Grey)
+                                'rgba(46, 204, 113, 0.7)',  // Happy (Green)
+                                'rgba(52, 152, 219, 0.7)'   // Sad (Blue)
+                                // Add more colors
+                            ],
+                            borderColor: [
+                                'rgba(127, 140, 141, 1)',
+                                'rgba(46, 204, 113, 1)',
+                                'rgba(52, 152, 219, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    };
+                     new Chart(vocalCtx, {
+                        type: 'bar',
+                        data: vocalData,
+                        options: {
+                            scales: { y: { beginAtZero: true } },
+                            responsive: true,
+                            maintainAspectRatio: false,
+                             plugins: { legend: { display: false } }
+                        }
+                    });
+                 } catch(e) {
+                      console.error("Error creating vocal chart:", e);
+                      vocalCtx.textContent = "Could not load vocal emotion chart.";
+                 }
+            } else {
+                 console.error("Canvas element for vocal chart not found.");
+            }
+
+        });
+    </script>
 
 </body>
-
 </html>
+

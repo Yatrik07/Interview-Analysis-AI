@@ -1,35 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static\css\style.css">
-    <title>Interview analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Interview Analysis - Home</title>
 </head>
-
 <body>
     <header>
-        <img class="logo" src="image.jpg" alt="logo">
-        <nav>
-            <ul class="nav_links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-        <a class="cta" href="#"><button>Analysis</button></a>
+        <div class="header-container">
+            <a href="{{ url_for('index') }}" class="logo-container">
+                <img class="logo" src="{{ url_for('static', filename='images/app-icon.png') }}" alt="Interview Analysis Logo">
+                <span class="brand-name">Interview Analysis</span>
+            </a>
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="{{ url_for('analysis') }}"><button>Analyze</button></a>
+        </div>
     </header>
 
-    <!-- Form -->
-    <div class="form">
-    <form action="/submit_video" method="post" enctype="multipart/form-data">
-        <label for="video">Select a video to upload:</label>
-        <input type="file" id="video" name="video" accept="video/*">
-        <input type="submit" value="Submit Video">
-      </form>
-    </div>
-</body>
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>Land Your Dream Job.</h1>
+                <p>Stop guessing. Start improving. Get instant, AI-powered feedback on your interview performance.</p>
+                <a href="{{ url_for('analysis') }}" class="cta-button">Analyze Your Interview Now</a>
+            </section>
 
+            <section class="how-it-works">
+                <h2>How It Works</h2>
+                <p>Our platform provides a comprehensive evaluation of your mock interviews. Just upload a video, and our deep learning algorithms will analyze your performance to generate a data-driven report. We'll show you what you're doing right and where you can improve.</p>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>Language & Speech Analysis</h3>
+                        <p>We analyze your pitch modulation, clarity, and word choice using advanced Automatic Speech Recognition (ASR) and NLP models to see if you sound confident and clear.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Emotion & Tone Recognition</h3>
+                        <p>Our CNN and BiLSTM models analyze your vocal tone and transcript to see if your emotional expression matches your message, helping you build trust and rapport.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Body Language Feedback</h3>
+                        <p>We track eye movement, facial expressions, and blinking patterns using OpenCV and Isolation Forests to improve your non-verbal communication.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="open-source">
+                <h2>Built on Open Source</h2>
+                <p>This project fits proudly within the open-source domain. We believe in transparency, collaboration, and building tools that benefit everyone. The entire codebase is available on GitHub, and it utilizes powerful open-source technologies like TensorFlow, Keras, and OpenCV.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Interview Analysis. All rights reserved.</p>
+    </footer>
+</body>
 </html>

@@ -1,122 +1,396 @@
+/* --- Global Styles --- */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    background-color: darkgray;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-li,
-a,
-button {
-    font-weight: 500;
-    font-size: 16px;
-    color: white;
-    text-decoration: none;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  background-color: #f4f7f6;
+  color: #333;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 2.8rem;
+}
+h2 {
+  font-size: 2rem;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 0.5rem;
+  margin-top: 2rem;
+}
+h3 {
+  font-size: 1.4rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+ul {
+  list-style-position: inside;
+  margin-bottom: 1rem;
+}
+li {
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Header & Navigation --- */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 10%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 1rem 5%;
+  width: 100%;
+  z-index: 100;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
 }
 
 .logo {
-    cursor: pointer;
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
 .nav_links {
-    list-style: none;
+  list-style: none;
+  display: flex;
 }
 
 .nav_links li {
-    display: inline-block;
-    padding: 0 20px;
+  margin-left: 2rem;
 }
 
-button {
-    padding: 9px 25px;
-    background-color: rgba(0, 136, 169, 1);
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
+.nav_links a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
-/*-------------------------------------------------------------------*/
-
-.container {
-    display: flex;
-    /* Enable flexbox layout */
+.nav_links a:hover,
+.nav_links a.active {
+  color: #3498db;
+  font-weight: 600;
 }
 
-.column {
-    flex: 1;
-    /* Divide the container into 3 equal parts */
-    height: auto;
-    /* Give each column a fixed height */
-    padding: 1em;
-    /* Add some padding */
+.cta button {
+  padding: 0.7rem 1.5rem;
+  background-color: #3498db;
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.left {
-    background-color: #f1f1f1;
-    /* Light grey background */
+.cta button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
 }
 
-.middle {
-    background-color: #ddd;
-    /* Light grey background */
+/* --- Footer --- */
+footer {
+  text-align: center;
+  padding: 2rem;
+  background-color: #2c3e50;
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-top: auto; /* Pushes footer to the bottom */
 }
 
-.right {
-    background-color: #f1f1f1;
-    /* Light grey background */
+/* --- Home Page Specifics --- */
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+.hero h1 {
+  font-size: 3.5rem;
+}
+.hero p {
+  font-size: 1.25rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+.hero .cta-button {
+  display: inline-block;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #3498db;
+  padding: 1rem 2.5rem;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.hero .cta-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
 }
 
-/*---------LEFT COLUMN----------------*/
-
-.photo {
-    width: 80%;
-    /* Make the photo fill the entire left column */
-    height: auto;
-    /* Keep the original aspect ratio */
+.features {
+  display: flex;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+.feature-card {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  text-align: center;
+}
+.feature-card h3 {
+  font-size: 1.5rem;
+  color: #3498db;
 }
 
-/* ---------MIDDLE COLUMN------------- */
-
-.green-text {
-    color: green;
+/* --- Contact Page Specifics --- */
+.contact-container {
+  text-align: center;
+}
+.contact-options {
+  display: flex;
+  gap: 2rem;
+  margin-top: 3rem;
+  justify-content: center;
+}
+.contact-card {
+  flex-basis: 300px;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+.contact-card a {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #3498db;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+.contact-card a:hover {
+  background-color: #2980b9;
 }
 
-.yellow-text {
-    color: yellow;
+/* --- Analysis (Upload) Page Specifics --- */
+main.analysis-page {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+.upload-container {
+  background-color: #ffffff;
+  padding: 3rem 4rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+.upload-container h1 {
+  font-size: 2.5rem;
+}
+.upload-container p {
+  font-size: 1.1rem;
+  color: #777;
+  margin-bottom: 2.5rem;
+}
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.file-input-container {
+  display: flex;
+  align-items: center;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  width: 100%;
+  justify-content: space-between;
+}
+input[type="file"] {
+  display: none;
+}
+.choose-file-btn {
+  background-color: #ecf0f1;
+  color: #333;
+  padding: 0.7rem 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+.choose-file-btn:hover {
+  background-color: #bdc3c7;
+}
+.file-name {
+  color: #555;
+  margin-left: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  text-align: left;
+}
+.submit-btn {
+  padding: 0.8rem 2rem;
+  width: 100%;
+  background-color: #3498db;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.submit-btn:hover {
+  background-color: #2980b9;
+}
+.submit-btn:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
 }
 
-.orange-text {
-    color: orange;
+/* ... existing styles ... */
+
+.analysis-results {
+    margin-top: 40px;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.red-text {
-    color: red;
+.analysis-results h2 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2em;
 }
 
-.black-text {
-    color: black;
-}
-
-.brown-text {
-    color: brown;
-}
-
-/* --------------RIGHT COLUMN------------------- */
-.fixed-text {
-    position: fixed;
-    top:auto; /* Set the top distance from the top of the page */
-    right: 0; /* Set the right distance from the right edge of the page */
-  }
-
-/* -------------Form---------------------- */
-form {
-    display: flex;
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
     justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
+
+.result-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: left;
+    transition: transform 0.2s ease-in-out;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+}
+
+.result-card h3 {
+    color: #007bff;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.result-card p {
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.result-card strong {
+    color: #333;
+}
+
+/* Text Analysis Specific Styling */
+.text-analysis p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+/* Emotion specific text colors (add more as needed for your encoder) */
+.anger-text { color: #dc3545; font-weight: bold; } /* Red */
+.fear-text { color: #ffc107; font-weight: bold; } /* Yellow */
+.joy-text { color: #28a745; font-weight: bold; } /* Green */
+.love-text { color: #e83e8c; font-weight: bold; } /* Pink/Magenta */
+.sadness-text { color: #007bff; font-weight: bold; } /* Blue */
+.surprise-text { color: #6f42c1; font-weight: bold; } /* Purple */
+/* You might want to define styles for neutral as well if it appears in text_data */
+.neutral-text { color: #6c757d; font-weight: bold; } /* Gray */

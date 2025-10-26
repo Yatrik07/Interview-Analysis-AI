@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Interview Analysis - About</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="{{ url_for('index') }}" class="logo-container">
+                <img class="logo" src="{{ url_for('static', filename='images/app-icon.png') }}" alt="Interview Analysis Logo">
+                <span class="brand-name">Interview Analysis</span>
+            </a>
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}" class="active">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="{{ url_for('analysis') }}"><button>Analyze</button></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>About This Project</h1>
+            
+            <section class="about-project">
+                <h2>Our Mission</h2>
+                <p>The job interview is often the most critical hurdle in a career. Yet, most candidates have no objective way to practice and get feedback. We built this Online Interview Analysis tool to demystify the process and empower job-seekers.</p>
+                <p>Our mission is to provide an accessible, data-driven resource that helps you gain insight into your performance. By analyzing your language, tone, and eye movements, our system provides a comprehensive report that highlights your strengths and pinpoints specific areas for improvement.</p>
+            </section>
+
+            <section class="tech-stack">
+                <h2>Our Technology</h2>
+                <p>This platform is built on a foundation of powerful, state-of-the-art open-source technologies:</p>
+                <ul>
+                    <li><strong>Speech & Audio:</strong> Pitch Modulation Analysis, Automatic Speech Recognition (ASR) using Transformers.</li>
+                    <li><strong>Natural Language Processing:</strong> CNN-BiLSTM models with Embedding layers for sentiment and emotion.</li>
+                    <li><strong>Computer Vision:</strong> TensorFlow/Keras CNNs for facial emotion recognition.</li>
+                    <li><strong>Eye Tracking:</strong> OpenCV with Haar-Cascades.</li>
+                    <li><strong>Behavioral Analysis:</strong> Anomaly Detection using Isolation Forest.</li>
+                    <li><strong>Web & Deployment:</strong> A Flask web application deployed in a Docker Container.</li>
+                </ul>
+            </section>
+
+            <section class="challenges">
+                <h2>Challenges We Faced</h2>
+                <p>Developing a system this complex wasn't easy. We encountered several challenges, especially with the misclassification of emotions from both facial expressions and transcripts. Accurately detecting eye blinking as an anomaly was also difficult. We overcame these issues by fine-tuning our deep learning models, incorporating additional training data, and utilizing advanced anomaly detection techniques to improve accuracy.</p>
+            </section>
+
+            <section class="developer">
+                <h2>About the Developer</h2>
+                <p>This project was created by Yatrikkumar Shah, a Data Science and Engineering professional passionate about applying machine learning to solve real-world challenges.</p>
+                <p>You can connect with him on <a href="https://www.linkedin.com/in/yatrikkumar-shah/" target="_blank">LinkedIn</a>.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Interview Analysis. All rights reserved.</p>
+    </footer>
+</body>
+</html>

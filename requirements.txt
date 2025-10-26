@@ -1,0 +1,10 @@
+flask
+tensorflow
+opencv-python
+numpy
+pandas
+nltk
+speechbrain
+soundfile 
+sox
+transformers
