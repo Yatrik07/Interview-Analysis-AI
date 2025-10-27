@@ -12,3 +12,8 @@ Speech_Rercog.ipynb
 split_and_merge.ipynb
 testing_videos/
 *.pyc
+*.h5
+*.zip
+*.flv
+pretrained_models/
+wav2vec2_checkpoints/
