@@ -71,8 +71,8 @@ The job interview is a critical step, yet candidates often lack objective feedba
 
 ### Clone the repository
 ```bash
-git clone [YOUR_GITHUB_REPO_LINK_HERE]
-cd [YOUR_PROJECT_DIRECTORY_NAME]
+git clone https://github.com/Yatrik07/Interview-Analysis-AI.git
+cd Interview-Analysis-AI
 ```
 
 ### Virtual Environment
@@ -107,15 +107,11 @@ python -m nltk.downloader stopwords
 ## Open Source Contribution
 
 This project uses open-source libraries: TensorFlow, Keras, Transformers, SpeechBrain, OpenCV, NLTK, Flask.  
-The code is publicly available on GitHub at [YOUR_GITHUB_REPO_LINK_HERE]. Contributions, feedback, and bug reports are welcome.  
+The code is publicly available on GitHub at https://github.com/Yatrik07/Interview-Analysis-AI. Contributions, feedback, and bug reports are welcome.  
 
 ## Developer
 
 **Yatrikkumar Shah**  
 [LinkedIn](https://www.linkedin.com/in/yatrikkumar-shah/)  
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE.md` file for details.
 
 
